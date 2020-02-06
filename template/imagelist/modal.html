@@ -1,0 +1,48 @@
+<!-- 
+dsis_modal module
+'upload', 'msg', 'show image' modals 
+-->
+
+<div id="dsis_modal_container">  
+    
+  <div id="dsis_modal" class="w3-modal w3-animate-opacity">
+    <div class="w3-modal-content">
+      <div class="w3-container">
+        <span onclick="document.getElementById('dsis_modal').style.display='none'" class="w3-button w3-display-topright">&times;</span>
+        <br><br>
+        <h2 id="dsis_modal_title">Notice</h2>
+        <p id="dsis_modal_msg">Some text. Some text. Some text.</p>
+        <div id="dsis_modal_button" class="w3-button w3-blue" onclick="">Submit</div>  
+        <br><br>
+      </div>
+    </div>
+    </div>    
+    
+</div>    
+
+  
+  
+  <script>
+
+
+
+    function callModalMsg(arg){
+        let targetDiv = document.getElementById("dsis_modal");
+        let modalTitle = document.getElementById("dsis_modal_title");
+        let modalMsg = document.getElementById("dsis_modal_msg");
+        let modalButton = document.getElementById("dsis_modal_button");
+        
+        modalTitle.innerHTML = arg.title;
+        modalMsg.innerHTML = arg.msg;
+        modalButton.setAttribute("onclick", arg.fn);
+        modalButton.innerHTML = arg.button;
+        
+        targetDiv.style.display = 'block';
+        modalMsg.innerHTML = arg.msg;    
+    }
+
+  
+  </script>
+
+    
+    

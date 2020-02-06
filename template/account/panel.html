@@ -1,0 +1,275 @@
+<div id="dsis_account_container" style="display:block">
+
+<div class="w3-container w3-light-grey w3-margin w3-center">
+  <h2> Account </h2> 
+</div>
+
+
+<div id="" class="w3-container w3-margin  w3-card" style="display:block">
+  <h2>User: <span id="dsis_account_username">Scoob</span></h2>
+  <p>Email: <span id="dsis_account_email">scob@mail.com</span></p>
+
+    <div class="w3-button w3-blue"  onclick="sendLogoutRequest()">Logout</div>  
+    <br>
+    <br>    
+</div>
+
+
+<div id="" class="w3-container w3-margin w3-card" style="display:block">
+  <h2>Change Password</h2>
+
+<form class="w3-container"> 
+  <br>
+  <label>Old Password:</label>
+  <input id="dsis_change_password_old_pass" class="w3-input " type="password"></p>
+  <p>
+  <label>New Password:</label>
+  <input id="dsis_change_password_new_pass" class="w3-input" type="password">
+  </p>  
+      
+    <div class="w3-button w3-blue" onclick="sendChangePassData()">Submit</div>  
+</form>
+
+
+</div>
+
+
+<div id="" class="w3-container w3-red w3-margin  w3-card" style="display:block">
+  <h2>Delete Account</h2>
+  <p>Delete account and all uploaded images.</p>
+ <br>
+  <label>Enter Password:</label>
+  <input id="dsis_delete_account_pass" class="w3-input w3-red " type="password"></p>
+  <p>
+      
+    <div class="w3-button w3-white" onclick="sendDeleteAccountRequest()">Delete Account</div>  
+    <br>
+    <br>
+</div>
+
+</div>
+
+<script>
+
+if (accountData.session){
+    document.getElementById("dsis_account_username").innerHTML = accountData.userData.name;
+    document.getElementById("dsis_account_email").innerHTML =  accountData.userData.email;
+}
+
+// DELETE USER
+
+function checkDeleteAccountPassword(){        
+    if ( /[^a-zA-Z0-9_]/.test( document.getElementById("dsis_delete_account_pass").value )){
+       setError("Delete Account Password: Password must be alphanumeric or underscore.");
+       return false;
+    }
+     
+    if ( document.getElementById("dsis_delete_account_pass").value.length <= 7){
+       setError("Delete Account Password: Password must be atleast 8 chars long.");
+       return false;
+    }
+        
+    return true;
+}
+
+function getDeleteAccountPasswordInput(){
+    if (checkDeleteAccountPassword()){       
+        return document.getElementById("dsis_delete_account_pass").value.trim();
+    }
+        
+    return false;
+}
+
+
+function sendDeleteAccountRequest_cb(arg){
+   
+    let json = null;
+
+    try {
+        json = JSON.parse(arg);   
+    } 
+    catch(e){        
+        setError("AJAX Error: Bad message format!");        
+        return;
+    }  
+
+    if (json.error){  
+        setError('Delete Account: '+ json.error);
+    }
+    if (json.success){          
+        setNotice(json.success);
+        setTimeout(function () {
+            getAccountPage();
+        }, 1000);
+    }    
+
+    return; 
+      
+}
+
+function sendDeleteAccountRequest(){     
+    let password = getDeleteAccountPasswordInput();
+     
+    if (password){
+        let key = 'deleteaccount';
+        let dataObj = { pass: password, id: accountData.userData.id, name: accountData.userData.name, email: accountData.userData.email};
+        let callbackFn = sendDeleteAccountRequest_cb;        
+        let requestUrl = getRequestUrl(); 
+    
+        let xmlHttp = new XMLHttpRequest();
+            xmlHttp.onreadystatechange = function(){
+                if(xmlHttp.readyState == 4 && xmlHttp.status == 200){
+                    callbackFn(xmlHttp.responseText);
+                }
+            }
+            
+            value = btoa(encodeURIComponent(JSON.stringify(dataObj)));
+            value = key + "=" + value;
+            
+            xmlHttp.open('POST', requestUrl); 
+            xmlHttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            xmlHttp.send(value); 
+    }
+}
+
+// LOGOUT
+
+function sendLogoutRequest_cb(arg){
+   
+    let json = null;
+
+    try {
+        json = JSON.parse(arg);   
+    } 
+    catch(e){
+        setError("AJAX Error: Bad message format!");
+        return false;
+    }  
+
+    if (json.error){    
+        setError(json.error);
+    }
+    if (json.success){                
+        let msg = 'User have logged off.'; 
+        setNotice(msg);        
+        setTimeout(function () {
+            getAccountPage();
+        }, 1000);
+    }    
+
+    return true; 
+      
+}
+
+function sendLogoutRequest(){      
+    let key = 'logout';
+    let dataObj = {'id': accountData.userData.id, 'name': accountData.userData.name, 'email': accountData.userData.email};
+    let callbackFn = sendLogoutRequest_cb;
+
+    let requestUrl = getRequestUrl(); 
+    
+    let xmlHttp = new XMLHttpRequest();
+        xmlHttp.onreadystatechange = function(){
+            if(xmlHttp.readyState == 4 && xmlHttp.status == 200){
+                callbackFn(xmlHttp.responseText);
+            }
+        }
+        
+        value = btoa(encodeURIComponent(JSON.stringify(dataObj)));
+        value = key + "=" + value;
+        
+        xmlHttp.open('POST', requestUrl); 
+        xmlHttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xmlHttp.send(value); 
+}
+
+// CHANGE PASS
+
+function checkChangePassword(){        
+    if ( /[^a-zA-Z0-9_]/.test( document.getElementById("dsis_change_password_old_pass").value )){
+       setError("Change Password: Old password must be alphanumeric or underscore.");
+       return false;
+    }
+     
+    if ( document.getElementById("dsis_change_password_old_pass").value.length <= 7){
+       setError("Change Password: Old password must be atleast 8 chars long.");
+       return false;
+    }
+     
+    if ( /[^a-zA-Z0-9_]/.test( document.getElementById("dsis_change_password_new_pass").value )){
+       setError("Change Password: New password must be alphanumeric or underscore.");
+       return false;
+    }     
+    
+    if ( document.getElementById("dsis_change_password_new_pass").value.length <= 7 ){
+       setError("Change Password: New password must be atleast 8 chars long.");
+       return false;
+    }
+        
+    return true;
+}
+
+function getChangePasswordInput(){
+    if (checkChangePassword()){        
+        var data = {
+            oldpass: document.getElementById("dsis_change_password_old_pass").value.trim(),
+            newpass: document.getElementById("dsis_change_password_new_pass").value.trim(),
+        };
+        
+        return data;
+    }
+    
+    return false;
+}
+
+
+function sendChangePassData_cb(arg){
+    
+    let json = null;
+    
+    try {
+        json = JSON.parse(arg);   
+    } 
+    catch(e){
+        setError("AJAX Error: Bad message format!");
+        return false;
+    }  
+    
+    if (json.error){    
+        setError(json.error);
+    }
+    if (json.success){    
+        let msg = 'Password changed.';
+        setNotice(msg);   
+    }    
+    
+    return true;    
+}  
+
+function sendChangePassData(){      
+    let key = 'changepassword';
+    let dataObj = getChangePasswordInput();
+    let callbackFn = sendChangePassData_cb;
+
+    if (dataObj){ 
+        let requestUrl = getRequestUrl(); 
+        
+        let xmlHttp = new XMLHttpRequest();
+            xmlHttp.onreadystatechange = function(){
+                if(xmlHttp.readyState == 4 && xmlHttp.status == 200){
+                    callbackFn(xmlHttp.responseText);
+                }
+            }
+            
+            value = btoa(encodeURIComponent(JSON.stringify(dataObj)));
+            value = key + "=" + value;
+            
+            xmlHttp.open('POST', requestUrl); 
+            xmlHttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            xmlHttp.send(value); 
+    }
+}
+
+
+
+</script>

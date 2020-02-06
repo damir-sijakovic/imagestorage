@@ -1,0 +1,164 @@
+
+<div id="dsis_modal_upload" class="w3-modal w3-animate-opacity">
+    <div class="w3-modal-content">
+        <div class="w3-container">
+            <span onclick="document.getElementById('dsis_modal_upload').style.display='none'" class="w3-button w3-display-topright">&times;</span>
+            <br>
+            <br>
+
+            <input type="file" id="ds_file_element" multiple accept=".png, .jpg, .jpeg" style="display:none" onchange="upload_afterSelectedFile(this.files)">
+            <button style="display:none" id="ds_file_select">Select some files</button>
+
+            <h2>Upload Image</h2>
+            <p>Select image file to upload:</p>
+
+            <div class="w3-bar w3-border ">
+                <span onclick="upload_fileChooser()" class="w3-bar-item w3-button w3-padding-large w3-blue">Select Image...</span>
+                <span id="upload_button" onclick="sendUploadData()" style="display:none" class="w3-animate-left w3-bar-item w3-button w3-padding-large w3-green ">Upload</span>
+                <span id="upload_text" style="display:block" class="w3-animate-opacity w3-bar-item w3-padding-large w3-light-gray"></span>
+                <span id="upload_clear" onclick="upload_clearFileChooser()" style="cursor:pointer;" class="w3-bar-item w3-white w3-large w3-right">×</span>
+            </div>
+
+            <br>
+            <br>
+
+            <br>
+            <br>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    function callModalUpload() {        
+        document.getElementById("dsis_flash_notice").style.display = 'none';
+        document.getElementById("dsis_flash_error").style.display = 'none';
+        
+        let targetDiv = document.getElementById("dsis_modal_upload");
+        targetDiv.style.display = 'block';
+
+    }
+    
+    
+    function sendUploadData_cb(arg){
+        let json = null;
+
+        try {
+            json = JSON.parse(arg);   
+        } 
+        catch(e){
+            setError("AJAX Error: Bad message format!");
+            return false;
+        }  
+
+        if (json.error){    
+            setError(json.error);
+        }
+        if (json.success){   
+            setNotice('"'+ json.success.filename + '.' + json.success.type + '" image uploaded.');
+            document.getElementById('dsis_modal_upload').style.display='none';
+            setTimeout(function () {
+                window.location.href = getRequestUrl() + '?dst=imagelist'; 
+            }, 420);
+
+        }    
+
+        return true;     
+    }
+
+  function sendUploadData(){     
+      
+    let uploadButton = document.getElementById("upload_button");
+    let fileElem = document.getElementById("ds_file_element");
+
+    if (fileElem.files[0].size > 2097152){
+        document.getElementById("dsis_modal_upload").style.display = 'none';
+        upload_clearFileChooser();
+        setError("Upload file size limited to 2MB.");
+
+        return;
+    }    
+    
+    let url = getRequestUrl();
+    uploadButton.setAttribute("onclick", "");
+    uploadButton.setAttribute("class", "w3-animate-left w3-bar-item w3-padding-large w3-gray");
+
+    let request = new XMLHttpRequest();
+    request.open("POST", url, true);
+    let formData = new FormData();
+	let file = fileElem.files[0];
+	formData.append("imageupload", file);
+	request.send(formData);
+
+	request.onload = () => sendUploadData_cb(request.responseText);	
+         
+  }
+
+  function upload_clearFileChooser(){
+      let fileElem = document.getElementById("ds_file_element");
+      let uploadButton = document.getElementById("upload_button");
+      let uploadText = document.getElementById("upload_text");
+      let uploadClear = document.getElementById("upload_clear");
+
+      fileElem.value = "";
+      uploadText.style.display = 'none';
+      uploadButton.style.display = 'none';
+      uploadClear.style.display = 'none';
+      uploadButton.setAttribute("onclick", "sendUploadData()");
+  }
+
+
+  function upload_alreadySelected(){
+      let fileElem = document.getElementById("ds_file_element");
+      let uploadButton = document.getElementById("upload_button");
+      let uploadText = document.getElementById("upload_text");
+
+
+      if (fileElem.files.length > 0){
+        uploadText.style.display = 'block';
+        uploadButton.style.display = 'block';
+        uploadText.innerHTML = fileElem.files[0].name;
+      }
+
+      
+  }
+
+  function upload_afterSelectedFile(arg){
+      let uploadButton = document.getElementById("upload_button");
+      let uploadText = document.getElementById("upload_text");
+      let uploadClear = document.getElementById("upload_clear");
+
+      if (arg){
+        uploadButton.style.display = 'block';
+        uploadText.style.display = 'block';
+        uploadClear.style.display = 'block';
+        uploadText.innerHTML = 'Filename: ' + arg[0].name;
+        uploadButton.setAttribute("class", "w3-animate-left w3-bar-item w3-button w3-padding-large w3-green");
+      }
+
+  }
+
+
+  function upload_fileChooser(){
+      let fileElem = document.getElementById("ds_file_element");
+
+        upload_clearFileChooser();    
+      fileElem.click();
+      
+     
+  }
+  
+  function showUploadContainer(){
+      hideAllElements();
+      document.getElementById("dsis_file_upload_container").style.display = 'block';
+   
+  }
+
+  function hideUploadContainer(){
+      document.getElementById("dsis_file_upload_container").style.display = 'none';
+  }
+    
+    
+    
+</script>

@@ -1,0 +1,127 @@
+
+
+<div id="dsis_creds_login" class="w3-card w3-white w3-animate-top  w3-margin" style="display:none">
+    <!-- display:block -->
+    <div class="w3-container w3-light-grey">
+        <h2>Login</h2>
+    </div>
+
+    <form class="w3-container">
+        <br>
+        <label>Email:</label>
+        <input id="dsis_creds_login_email" class="w3-input" type="text">
+        </p>
+        <p>
+            <label>Password</label>
+            <input id="dsis_creds_login_pass" class="w3-input" type="password">
+        </p>
+        <p>
+
+            <div class="w3-button w3-blue" onclick="sendLoginData()">Submit</div>
+    </form>
+
+    <br>
+    <br>
+</div>
+
+<br>
+</div>
+
+
+
+<script>
+
+function clearLogin(){
+    document.getElementById("dsis_creds_login_email").value = '';
+    document.getElementById("dsis_creds_login_pass").value = '';     
+}
+
+function checkLogin(){        
+    if ( /\S+@\S+/.test( document.getElementById("dsis_creds_login_email").value) == false){
+       setError("Login: bad email format.");
+       return false;
+    }
+    
+    if ( /[^a-zA-Z0-9_]/.test( document.getElementById("dsis_creds_login_pass").value )){
+       setError("Login password must be alphanumeric or underscore.");
+       return false;
+    }
+    
+    if ( document.getElementById("dsis_creds_login_pass").value.length <= 7){
+       setError("Login password must be atleast 8 chars long.");
+       return false;
+    }
+    
+    return true;    
+}
+
+
+function getLoginInput(){
+    if (checkLogin()){
+        var data = {
+            email: document.getElementById("dsis_creds_login_email").value.trim(),
+            password: document.getElementById("dsis_creds_login_pass").value.trim(),
+        };
+
+        return data;
+    }
+    
+    return false;
+}
+
+
+function sendLoginData_cb(arg){
+    
+    let json = null;
+    
+    try {
+        json = JSON.parse(arg);   
+    } 
+    catch(e){
+        setError("AJAX Error: Bad message format!");
+        return false;
+    }  
+    
+    if (json.error){    
+        setError(json.error);
+    }
+    if (json.success){    
+        let msg = 'User: "'+ json.success.name +'" have logged on.';
+
+        setNotice(msg);        
+        setTimeout(function () {
+            getImageListPage();
+        }, 1000);
+    }    
+    
+    return true;    
+}  
+
+
+function sendLoginData(){      
+    let key = 'login';
+    let dataObj = getLoginInput();
+    let callbackFn = sendLoginData_cb;
+
+    if (dataObj){ 
+        let requestUrl = getRequestUrl(); 
+        
+        let xmlHttp = new XMLHttpRequest();
+            xmlHttp.onreadystatechange = function(){
+                if(xmlHttp.readyState == 4 && xmlHttp.status == 200){
+                    callbackFn(xmlHttp.responseText);
+                }
+            }
+            
+            value = btoa(encodeURIComponent(JSON.stringify(dataObj)));
+            value = key + "=" + value;
+            
+            xmlHttp.open('POST', requestUrl); 
+            xmlHttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            xmlHttp.send(value); 
+    }
+}
+
+
+
+</script>

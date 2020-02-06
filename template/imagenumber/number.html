@@ -1,0 +1,83 @@
+<!-- 
+dsis_imagenumber module
+-->
+
+<div id="dsis_modal_container">  
+
+<div id="dsis_postnumber_list_container" class="w3-container w3-margin w3-card w3-white" style="display:block">
+  <h2>Number Of Images</h2>
+  <p>Click to get number of images uploaded by all users:</p>
+
+   <span id="dsis_postnumber_call"  onclick="getNumberOfImagesRequest()" class="w3-button w3-animate-left w3-card-4 w3-tag w3-jumbo  w3-blue w3-padding-large"><u>Get Number</u></span> 
+   <span id="dsis_postnumber_output" class="w3-button  w3-animate-left w3-card-4 w3-tag w3-jumbo w3-black w3-padding-large" style="display:none"></span> 
+    
+  </ul>
+  
+  <br>
+  <br>
+</div>
+
+</div>
+
+
+<script>
+
+function showNumberOfImages(arg){   
+    let elem = document.getElementById("dsis_postnumber_output");
+    let button = document.getElementById("dsis_postnumber_call");
+    elem.style.display = 'none';
+    button.onclick = '';
+     
+    elem.style.display = 'inline-block';
+    elem.innerHTML = arg;
+}
+
+
+function getNumberOfImagesRequest_cb(arg){
+   
+    let json = null;
+
+    try {
+        json = JSON.parse(arg);   
+    } 
+    catch(e){
+        setError("AJAX Error: Bad message format!");
+        return false;
+    }  
+
+    if (json.error){    
+        setError(json.error);
+    }
+    if (json.success){    
+        setTimeout(function () {
+            showNumberOfImages(json.success);
+        }, 420);
+        
+    }    
+
+    return true; 
+      
+}
+
+function getNumberOfImagesRequest(){      
+    let key = 'imagenumber';
+    let callbackFn = getNumberOfImagesRequest_cb;
+
+    let requestUrl = getRequestUrl(); 
+    
+    let xmlHttp = new XMLHttpRequest();
+        xmlHttp.onreadystatechange = function(){
+            if(xmlHttp.readyState == 4 && xmlHttp.status == 200){
+                callbackFn(xmlHttp.responseText);
+            }
+        }
+        
+        value = key + "=" + null;
+        
+        xmlHttp.open('POST', requestUrl); 
+        xmlHttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xmlHttp.send(value); 
+}
+
+</script>
+

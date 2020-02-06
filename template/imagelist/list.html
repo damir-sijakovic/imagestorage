@@ -1,0 +1,261 @@
+<!-- 
+dsis_imagelist module
+-->
+
+<div id="dsis_modal_container">  
+
+<div id="dsis_modal_delete" class="w3-modal w3-animate-opacity">
+    <div class="w3-modal-content">
+      <div class="w3-container">
+        <span onclick="document.getElementById('dsis_modal_delete').style.display='none'" class="w3-button w3-display-topright">&times;</span>
+        <br><br>
+        <h2>Delete Image</h2>
+        <p id="dsis_modal_delete_msg">...</p>
+        <div id="dsis_modal_delete_btn" class="w3-button w3-red" onclick="">Delete</div>  
+        <br><br>
+      </div>
+    </div>
+    </div>
+    
+     
+  <div id="dsis_modal_image" class="w3-modal" onclick="this.style.display='none'">
+    <span class="w3-button w3-hover-red w3-xlarge w3-black w3-display-topright">&times;</span>
+    <div class="w3-modal-content w3-animate-zoom">
+      <img id="dsis_modal_image_src" src="" style="width:100%">
+    </div>
+  </div>
+  
+</div>
+
+
+<div id="dsis_imagelist_container" class="w3-container" style="display:none">
+    <h2>Image List</h2>
+    <p>List of images uploaded by all users:</p>
+    <ul id="dsis_image_list" class="w3-ul w3-card-4">
+
+<!--
+        <li class="w3-bar w3-center w3-blue w3-button" onclick="callModalUpload()">
+            <span class="w3-small"><b> + Upload Image </b></span> 
+        </li>
+        
+      
+        <li class="w3-bar">
+            <span onclick="this.parentElement.style.display='none'" class="w3-bar-item w3-button w3-white w3-xlarge w3-right">×</span>
+            <img src="./kit.jpg" class="w3-bar-item w3-hide-small" style="width:85px">
+            <div class="w3-bar-item">
+                <span class="w3-large">Kitty</span>
+                <br>
+                <small>Uploaded by: test</small>
+            </div>
+        </li>
+
+-->
+
+    </ul>
+    
+
+    
+</div>
+
+
+<script>
+
+// GLOBALS
+
+var dsis_imagelist_last_selected_id = -1;
+
+// MODALS
+
+function callModalDelete(msg, imageid, ownerid){
+    document.getElementById("dsis_modal_delete").style.display = 'block';
+    document.getElementById("dsis_modal_delete_msg").innerHTML = msg;
+    document.getElementById("dsis_modal_delete_btn").setAttribute("onclick", 'sendDeleteImageRequest(' + imageid + ',' + ownerid + ')' ); 
+}
+
+function closeModalDelete(){
+    document.getElementById("dsis_modal_delete").style.display = 'none';
+    document.getElementById("dsis_modal_delete_msg").innerHTML = '';
+    document.getElementById("dsis_modal_delete_btn").setAttribute("onclick", '' ); 
+}
+
+
+function callModalImage(arg){
+    let targetDiv = document.getElementById("dsis_modal_image");
+    let targetImg = document.getElementById("dsis_modal_image_src");        
+    targetImg.setAttribute("src", arg.image);
+    targetImg.setAttribute("onclick", arg.cb);
+    
+    targetDiv.style.display = 'block';
+}
+
+
+
+// AJAX
+function sendDeleteImageRequest_cb(arg){
+   
+    let json = null;
+
+    try {
+        json = JSON.parse(arg);   
+    } 
+    catch(e){
+        setError("AJAX Error: Bad message format!");
+        return false;
+    }  
+
+    if (json.error){    
+        setError(json.error);
+        closeModalDelete();
+    }
+    if (json.success){  
+        setNotice(json.success); 
+
+        setTimeout(function () {
+            closeModalDelete();
+            let elem = document.getElementById(dsis_imagelist_last_selected_id);
+            document.getElementById(dsis_imagelist_last_selected_id).parentElement.removeChild(elem);    
+        }, 300);
+    }    
+
+    return true; 
+      
+}
+
+function sendDeleteImageRequest(imageId, ownerId){      
+    let key = 'deleteimage';
+    
+    document.getElementById("dsis_modal_delete_btn").setAttribute("onclick", '' ); 
+    
+    let dataObj = {'ownerid': ownerId, 'name': accountData.userData.name, 'imageid': imageId};
+    let callbackFn = sendDeleteImageRequest_cb;
+
+    let requestUrl = getRequestUrl(); 
+    
+    let xmlHttp = new XMLHttpRequest();
+        xmlHttp.onreadystatechange = function(){
+            if(xmlHttp.readyState == 4 && xmlHttp.status == 200){
+                callbackFn(xmlHttp.responseText);
+            }
+        }
+        
+        value = btoa(encodeURIComponent(JSON.stringify(dataObj)));
+        value = key + "=" + value;
+        
+        xmlHttp.open('POST', requestUrl); 
+        xmlHttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xmlHttp.send(value); 
+}
+    
+// IMAGE LIST
+    
+function dsis_imagelist_delete(arg){
+    var index = parseInt(arg);
+    
+    callModalDelete("Do you wish to delete '"+ accountData.imgData[index].filename +"' image?", accountData.imgData[index].imageid, accountData.imgData[index].userid);
+    dsis_imagelist_last_selected_id = index;
+}  
+    
+    
+function dsis_imagelist_show(){
+    document.getElementById("dsis_imagelist_container").style.display = 'block';
+}
+
+function dsis_imagelist_hide(){
+    document.getElementById("dsis_imagelist_container").style.display = 'none';
+}
+
+
+function createListItem(arg){
+    let targetDiv = document.getElementById("dsis_image_list");
+    
+    let li = document.createElement("li"); 
+ 
+    li.setAttribute("class", 'w3-bar w3-animate-opacity');   
+    li.setAttribute("onclick", 'callModalImage({ image:' + '"' + accountData.imageDir + arg.img +'"})');   
+    li.setAttribute("id", arg.index);
+    //accountData.imageDir
+    let closeButton = document.createElement("span");
+    closeButton.setAttribute("onclick", "event.stopPropagation(), dsis_imagelist_delete("+ arg.index +")");   
+    closeButton.setAttribute("class", "w3-bar-item w3-button w3-white w3-xlarge w3-right");   
+    closeButton.innerHTML = "×";     
+    li.appendChild(closeButton);
+    
+    let image = document.createElement("img");  
+    
+    let t = arg.img.split(".");    
+    let thumbnail = t[0]+'_t.'+t[1];    
+    
+    image.setAttribute("src", accountData.imageDir + thumbnail); 
+    //image.setAttribute("src", './image_data/' + thumbnail); 
+    image.setAttribute("class", "w3-bar-item w3-hide-small");  
+    image.setAttribute("style", " width:85px");
+    
+    li.appendChild(image);    
+    
+    let bar = document.createElement("div"); 
+    bar.setAttribute("class", "w3-bar-item");  
+    let barTitle = document.createElement("span"); 
+    barTitle.setAttribute("class", "w3-large"); 
+    barTitle.innerHTML = arg.title;
+    bar.appendChild(barTitle);   
+    let barTitleBr = document.createElement("br"); 
+    bar.appendChild(barTitleBr);
+    let barSmall = document.createElement("small"); 
+    barSmall.setAttribute("class", "w3-text-gray"); 
+    barSmall.innerHTML = 'Uploaded by: '+ arg.owner + ' (' + arg.email + ')';
+    bar.appendChild(barSmall);
+    li.appendChild(bar);    
+    
+     
+    targetDiv.appendChild(li);    
+
+}
+
+
+
+function clearImageList(){
+    let targetDiv = document.getElementById("dsis_image_list");
+    targetDiv.innerHTML = '';
+    
+    let li = document.createElement("li"); 
+    li.setAttribute("class", 'w3-bar w3-center w3-blue w3-button');   
+    li.setAttribute("onclick", 'callModalUpload()');   
+    
+    let text = document.createElement("span");
+    text.setAttribute("class", 'w3-small'); 
+    li.appendChild(text); 
+    let boldText = document.createElement("b"); 
+    boldText.innerHTML = "+ Upload Image";
+    text.appendChild(boldText);   
+     
+    targetDiv.appendChild(li);
+}
+
+
+ 
+function listUploadedImages(){    
+    clearImageList();    
+    for (let i=0; i<accountData.imgData.length; i++){
+        createListItem({
+            img: accountData.imgData[i].newname,
+            title: accountData.imgData[i].filename,
+            owner: accountData.imgData[i].username,
+            email: accountData.imgData[i].email,
+            index: i,
+        });
+    }
+}
+
+
+
+dsis_imagelist_show();
+
+
+setTimeout(function () {
+    listUploadedImages();
+    
+}, 750);
+
+
+</script>
+

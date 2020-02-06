@@ -1,0 +1,30 @@
+<!-- flash messages -->  
+<div id="dsis_flash_error" class="w3-animate-opacity w3-panel w3-red w3-display-container w3-card" style="margin:20px; display:none"> <!-- display:block -->
+  <span onclick="this.parentElement.style.display='none'" class="w3-button w3-large w3-display-topright">&times;</span>
+  <h3>Error</h3>
+  <p id="dsis_flash_error_msg">Red often indicates a dangerous or negative situation.</p>
+</div>
+    
+    
+<div id="dsis_flash_notice" class="w3-animate-opacity w3-panel w3-green w3-display-container w3-card" style="margin:20px; display:none"> <!-- display:block -->
+  <span onclick="this.parentElement.style.display='none'" class="w3-button w3-large w3-display-topright">&times;</span>
+  <h3>Notice</h3>
+  <p id="dsis_flash_notice_msg">Red often indicates a dangerous or negative situation.</p>
+</div>
+
+<script>
+
+function setNotice(arg_msg){
+    scrollTo(document.body, 0, 420); 
+    document.getElementById("dsis_flash_notice").style.display = 'block';
+    document.getElementById("dsis_flash_notice_msg").innerHTML = arg_msg;
+}
+
+
+function setError(arg_msg){
+    scrollTo(document.body, 0, 420); 
+    document.getElementById("dsis_flash_error").style.display = 'block';
+    document.getElementById("dsis_flash_error_msg").innerHTML = arg_msg;
+}
+
+</script>

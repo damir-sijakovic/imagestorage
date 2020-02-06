@@ -1,0 +1,163 @@
+<!-- register form -->   
+
+
+
+<div id="dsis_creds_register" class="w3-card w3-white w3-animate-top w3-margin" style="display:none"> <!-- display:block -->
+<div class="w3-container w3-light-grey">
+  <h2>Register</h2>
+</div>
+    
+<form class="w3-container"> 
+  <p>
+  <label>Username:</label>
+  <input id="dsis_creds_register_username" class="w3-input" type="text"></p>
+  <p>
+  <label>Email:</label>
+  <input id="dsis_creds_register_email" class="w3-input" type="text"></p>
+  <p>
+  <label>Password:</label>
+  <input id="dsis_creds_register_pass" class="w3-input" type="password"></p>  
+  <label>Re-enter Password:</label>
+  <input id="dsis_creds_register_repass" class="w3-input" type="password"></p>
+      
+    <div class="w3-button w3-blue"  onclick="sendRegisterData()">Submit</div>  
+</form>
+      
+<br><br>
+</div> 
+
+
+
+
+<script>
+
+function clearRegister(){
+    document.getElementById("dsis_creds_register_username").value = '';
+    document.getElementById("dsis_creds_register_email").value = '';     
+    document.getElementById("dsis_creds_register_pass").value = '';     
+    document.getElementById("dsis_creds_register_repass").value = '';     
+}
+
+function checkRegister(){        
+    if ( /[^a-zA-Z0-9_]/.test( document.getElementById("dsis_creds_register_username").value )){
+       setError("Register username must be alphanumeric or underscore.");
+       return false;
+    }
+    
+    if ( document.getElementById("dsis_creds_register_username").value.length <= 7){
+       setError("Register username must be atleast 8 chars long.");
+       return false;
+    }
+    
+    if ( /\S+@\S+/.test( document.getElementById("dsis_creds_register_email").value) == false){
+       setError("Register: Bad email format.");
+       return false;
+    }
+     
+    if ( /[^a-zA-Z0-9_]/.test( document.getElementById("dsis_creds_register_pass").value )){
+       setError("Register password must be alphanumeric or underscore.");
+       return false;
+    }
+     
+    if ( document.getElementById("dsis_creds_register_pass").value.length <= 7){
+       setError("Register password must be atleast 8 chars long.");
+       return false;
+    }
+     
+    if ( /[^a-zA-Z0-9_]/.test( document.getElementById("dsis_creds_register_repass").value )){
+       setError("Register re-password must be alphanumeric or underscore.");
+       return false;
+    }     
+    
+    if ( document.getElementById("dsis_creds_register_repass").value.length <= 7 ){
+       setError("Register re-password must be atleast 8 chars long.");
+       return false;
+    }
+    
+    
+    if ( document.getElementById("dsis_creds_register_pass").value !==
+        document.getElementById("dsis_creds_register_repass").value
+    ){
+       setError("Register password and re-password don't match!");
+       return false;
+    }
+    
+    return true;
+}
+
+function getRegisterInput(){
+    if (checkRegister()){        
+        var data = {
+            username: document.getElementById("dsis_creds_register_username").value.trim(),
+            email: document.getElementById("dsis_creds_register_email").value.trim(),
+            password: document.getElementById("dsis_creds_register_pass").value.trim(),
+        };
+        
+        return data;
+    }
+    
+    return false;
+}
+
+
+function sendRegisterData_cb(arg){
+    
+    let json = null;
+
+    try {
+        json = JSON.parse(arg);   
+    } 
+    catch(e){
+        setError("AJAX Error: Bad message format!");
+        return false;
+    }  
+
+    if (json.error){    
+        setError(json.error);
+    }
+    if (json.success){    
+        clearRegister();
+        setNotice('Registration Successful');
+        document.getElementById("dsis_creds_register").style.display = 'none';     
+        setTimeout(function () {
+            document.getElementById("dsis_creds_login").style.display = 'block';
+            document.getElementById("dsis_creds_login_email").value = json.success;
+        }, 1000);
+      
+    }    
+
+    return true; 
+
+}
+
+
+
+function sendRegisterData(){      
+    let key = 'register';
+    let dataObj = getRegisterInput();
+    let callbackFn = sendRegisterData_cb;
+
+    if (dataObj){ 
+        let requestUrl = getRequestUrl(); 
+        
+        let xmlHttp = new XMLHttpRequest();
+            xmlHttp.onreadystatechange = function(){
+                if(xmlHttp.readyState == 4 && xmlHttp.status == 200){
+                    callbackFn(xmlHttp.responseText);
+                }
+            }
+            
+            value = btoa(encodeURIComponent(JSON.stringify(dataObj)));
+            value = key + "=" + value;
+            
+            xmlHttp.open('POST', requestUrl); 
+            xmlHttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            xmlHttp.send(value); 
+    }
+}
+
+
+
+
+</script>
+

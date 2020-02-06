@@ -1,0 +1,32 @@
+
+<div class="w3-bar w3-blue" >
+    
+     <img class="w3-bar-item" src="./assets/logo.svg" height="40" width="40" style="margin-right: -20px;" > 
+    <span class="w3-bar-item">Damir Šijaković - PHP Image Storage</span>
+    <div id="dsis_bar_login_items" style="display:none">
+        <span class="w3-bar-item w3-button w3-right" onclick="getAccountPage()">Account</span>
+        <span class="w3-bar-item w3-button w3-right" onclick="getImageListPage()" >ImageList</span>
+        <span class="w3-bar-item w3-button w3-right" onclick="getImageNumberPage()" >ImageNumber</span>
+    </div>
+</div>
+
+
+<script>
+
+function getAccountPage(){  
+        window.location.href = getRequestUrl() + '?dst=account';       
+}
+
+function getImageListPage(){  
+        window.location.href = getRequestUrl() + '?dst=imagelist';       
+}
+
+function getImageNumberPage(){  
+        window.location.href = getRequestUrl() + '?dst=imagenumber';       
+}
+
+if (accountData.session){
+    document.getElementById("dsis_bar_login_items").style.display = 'block';
+}
+
+</script>

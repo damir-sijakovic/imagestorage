@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<!-- link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet" -->
+<script src="./assets/main.js" type="text/javascript"></script> 
+<link rel="stylesheet" href="./assets/w3.css"> 
+    <style type="text/css">
+        html,
+        body {
+            height: 100%;
+            font-family: 'Roboto Regular', sans-serif;
+            font-weight: 200;
+            font-size: 16px;
+        }  
+    </style>
+</head>
+<script>
+
+
+
+
+function goToIndexPage(){
+    window.location.href = getRequestUrl();
+}
+
+</script>
+
+
+<body class="w3-animate-top">
+
+
+
+<div class="w3-container">
+<div class="w3-container">
+
+
+
+  <h2>
+    <script>
+        document.write(errorData.title);
+    </script>
+  </h2>
+  <p>Project have error.</p>
+
+
+<hr>
+
+  <div class="w3-card-4" style="width:50%;">
+    <header class="w3-container w3-red">
+      <h1>Error</h1>
+    </header>
+
+    <div class="w3-container">
+      <p>
+        <script>
+            document.write(errorData.msg);
+        </script>        
+      </p>
+      
+
+        <p style="cursor:pointer; text-decoration: underline" onclick="goToIndexPage()" class="w3-text-blue">Go to index page...</p>
+    
+
+    </div>
+    
+  </div>
+</div>
+
+
+</body>
+</html>
