@@ -136,7 +136,7 @@ class Image extends User
     public function getNumberOfDirImages()
     {  
         $uploadDir = $this->getConfigValue('uploadDir');
-        $fileNumber = count(scandir($this->getConfigValue('uploadDir'))) -2;
+        $fileNumber = count(scandir($this->getConfigValue('uploadDir'))) -3;
         
         if ($fileNumber == 0){
            return $fileNumber; 
