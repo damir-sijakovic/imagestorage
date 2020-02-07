@@ -21,6 +21,8 @@ class Config
         'thumbnailSize' => 64,   
         'uploadDir' => __DIR__ . '/public/_imagedata_/',
         'publicUploadDir' => './_imagedata_/',
+        
+        
 	]; 
     
 };

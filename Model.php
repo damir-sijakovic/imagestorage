@@ -7,7 +7,8 @@ class Model extends DbConnection
 {
     
 
-    public function userExists($name){ 
+    public function userExists($name)
+    { 
         if (!is_string($name)) consoleLog('userExists(): argument value must be string.');
         $pdo = self::$pdo;
         
@@ -37,7 +38,8 @@ class Model extends DbConnection
         return -1;
     }
     
-    public function getUserData($id){ 
+    public function getUserData($id)
+    { 
         if (!is_int($id)) consoleLog('getUserData(): argument value must be integer.');
         $pdo = self::$pdo;
         
@@ -67,7 +69,8 @@ class Model extends DbConnection
         return [];
     }
 
-    public function emailExists($email){ 
+    public function emailExists($email)
+    { 
         if (!is_string($email)) consoleLog('emailExists(): argument value must be string.');
         $pdo = self::$pdo;
         
@@ -99,7 +102,8 @@ class Model extends DbConnection
 
 
 
-    public function addUser($name, $password, $email){ 
+    public function addUser($name, $password, $email)
+    { 
         if (!is_string($name)) consoleLog('addUser(): argument value must be string.');
         if (!is_string($email)) consoleLog('addUser(): argument value must be string.');
         if (!is_string($password)) consoleLog('addUser(): argument value must be string.');
@@ -128,7 +132,8 @@ class Model extends DbConnection
 
     }
 
-    public function changePass($id, $newpassword){ 
+    public function changePass($id, $newpassword)
+    { 
         if (!is_int($id)) consoleLog('changePass(): argument value must be integer.');
         if (!is_string($newpassword)) consoleLog('changePass(): argument value must be string.');
         $pdo = self::$pdo;
@@ -152,7 +157,8 @@ class Model extends DbConnection
         return $id;
     }
 
-     public function removeUser($name){ 
+     public function removeUser($name)
+     { 
         if (!is_string($name)) consoleLog('removeUser(): argument value must be string.');
         $pdo = self::$pdo;
                 
@@ -181,7 +187,8 @@ class Model extends DbConnection
     }
     
 
-    public function addImage($filename, $type, $userid, $size ){ 
+    public function addImage($filename, $type, $userid, $size )
+    { 
         if (!is_string($filename)) consoleLog('addImage(): argument filename must be string.');
         if (!is_string($type)) consoleLog('addImage(): argument type must be string.');
         if (!is_int($userid)) consoleLog('addImage(): argument userid must be integer.');
@@ -213,7 +220,8 @@ class Model extends DbConnection
     }
     
 
-    public function deleteImage($id){ 
+    public function deleteImage($id)
+    { 
         if (!is_int($id)) consoleLog('deleteImage(): argument value must be integer.');
         $pdo = self::$pdo;
                 

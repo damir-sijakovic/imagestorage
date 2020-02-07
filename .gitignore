@@ -1,0 +1,3 @@
+# Ignore bash scripts and geany project file
+*.sh
+*.geany

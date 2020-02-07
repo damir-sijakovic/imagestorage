@@ -31,7 +31,7 @@ To create base sql skeleton, copy and run query sql content in database.db to ph
 
 ### Project Structure
 
-Class are separated in files logically and extend one another, keeping everything
+Classes are separated in files logically and extend one another, keeping everything
 under one roof.
 
 
