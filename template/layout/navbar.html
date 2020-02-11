@@ -6,7 +6,6 @@
     <div id="dsis_bar_login_items" style="display:none">
         <span class="w3-bar-item w3-button w3-right" onclick="getAccountPage()">Account</span>
         <span class="w3-bar-item w3-button w3-right" onclick="getImageListPage()" >ImageList</span>
-        <span class="w3-bar-item w3-button w3-right" onclick="getImageNumberPage()" >ImageNumber</span>
     </div>
 </div>
 
@@ -19,10 +18,6 @@ function getAccountPage(){
 
 function getImageListPage(){  
         window.location.href = getRequestUrl() + '?dst=imagelist';       
-}
-
-function getImageNumberPage(){  
-        window.location.href = getRequestUrl() + '?dst=imagenumber';       
 }
 
 if (accountData.session){

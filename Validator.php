@@ -6,7 +6,7 @@ require __DIR__ . '/Core.php';
 class Validator extends Core
 {
     
-    public function validate($data, $type, $index=null)
+    public function validate($data, $type, $index=null) //validate(123, 'int') or validate("Hello string world", 'string:48:alpha')
     {
         if ($type == "string")
         {
@@ -284,7 +284,7 @@ class Validator extends Core
         
 
     }
-  
+    //  validateArgs([$arg1, $arg2, $arg3], ['int', 'string:24:alpha', 'array'])
     public function validateArgs($data, $types)
     {
         if (!is_array($data) || !is_array($types))

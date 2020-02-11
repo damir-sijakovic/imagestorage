@@ -90,10 +90,6 @@ class Controller extends View
                     $this->viewImageListPage(); 
                     return;
                 }                 
-                else if ($request['dst'] == 'imagenumber' && $userOnline){
-                    $this->viewImageNumberPage(); 
-                    return;
-                }     
                 else {
                     $this->setError('Wrong url parameter.');
                     $this->viewErrorPage();    

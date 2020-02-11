@@ -20,6 +20,8 @@ echo file_get_contents(__DIR__ . '/layout/navbar.html', true);
 
 if ($userOnline){
     echo file_get_contents(__DIR__ . '/account/panel.html', true);
+    echo file_get_contents(__DIR__ . '/account/imagenumber.html', true);
+    
 }
 else
 {
@@ -27,10 +29,6 @@ else
     echo file_get_contents(__DIR__ . '/account/register.html', true);
     echo file_get_contents(__DIR__ . '/account/login.html', true);
 }
-
-
-
-
 
 echo file_get_contents(__DIR__ . '/layout/tail.html', true);
 

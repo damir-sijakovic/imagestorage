@@ -132,12 +132,7 @@ class View extends Image
     {        
         $this->compilePage('imagelist');
     }
-    
-    public function viewImageNumberPage()
-    {        
-        $this->compilePage('imagenumber');
-    }
-       
+
     public function compilePage($pageName)
     {        
         ob_start();

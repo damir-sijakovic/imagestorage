@@ -26,7 +26,7 @@ dsis_paginator module
 
 <script>
 
-console.log(accountData);
+//console.log(accountData);
 
 function dsis_paginator(){
     
@@ -44,8 +44,6 @@ function dsis_paginator(){
     let next = document.getElementById("dsis_paginator_next");
     let last = document.getElementById("dsis_paginator_last");
     let groupNumbers = accountData.paginator.group.split(",");
-    // w3-disabled    
-    console.log(groupNumbers);
     
     if (accountData.paginator.first){
         first.setAttribute('href', accountData.paginator.first);
@@ -82,7 +80,7 @@ function dsis_paginator(){
     }
     else
     {
-        page3.style.display = 'none';
+        page2.style.display = 'none';
     }
     
     if (accountData.paginator.page3){
