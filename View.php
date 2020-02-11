@@ -8,12 +8,30 @@ class View extends Image
     public function parsePaginate($urlParam)
     {
         $paginationPage = $_GET[$this->getConfigValue('pageString')];   
+        
+        //if garbage in urlparams set to 1
+        if (!ctype_digit($paginationPage)){ 
+            $paginationPage = 1;
+        }
+        if (! (intval($paginationPage) > 0)){ 
+            $paginationPage = 1;
+        }    
+        
             
         $this->setSessionConfig( $this->getConfigValue('pageString') , $paginationPage);      
 
         if (isset($_GET[$this->getConfigValue('perPageString')]))
         {   
             $paginationPerPage = $_GET[$this->getConfigValue('perPageString')];
+            
+            //if garbage in urlparams set to 10
+            if (!ctype_digit($paginationPerPage)){ 
+                $paginationPerPage = 10;
+            }            
+            if (! (intval($paginationPerPage) > 0)){ 
+                $paginationPerPage = 10;
+            }  
+                 
             $this->setSessionConfig($this->getConfigValue('perPageString'), $paginationPerPage);  
         }
         else 
@@ -33,6 +51,7 @@ class View extends Image
             $this->setSessionConfig( $this->getConfigValue('pageString') , $paginationPage);   
         } 
         
+        return true;        
     }
     
     public function getPaginationData()

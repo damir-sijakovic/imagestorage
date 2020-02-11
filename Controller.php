@@ -83,9 +83,13 @@ class Controller extends View
                                       
                     if (isset($_GET[$this->getConfigValue('pageString')]))
                     {
-                        $this->parsePaginate($_GET[$this->getConfigValue('pageString')]);
+                        $noError = $this->parsePaginate($_GET[$this->getConfigValue('pageString')]);
+                        if (!$noError)
+                        {
+                            $this->setError('Wrong url parameter.');
+                            $this->viewErrorPage();    
+                        }
                     }
-                    //parsePaginate($urlParam)                        
                         
                     $this->viewImageListPage(); 
                     return;

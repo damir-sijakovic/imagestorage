@@ -2,8 +2,8 @@
 
 ---
 
-This is a demo project and is not meant to be used as real gallery as emphasis is
-placed on demonstration of functionality.
+THIS IS A DEMO PROJECT AND IS NOT MEANT TO BE USED AS REAL GALLERY AS EMPHASIS IS
+PLACED ON DEMONSTRATION OF FUNCTIONALITY.
 
 ### Install/Setup
 
@@ -74,6 +74,10 @@ file input html node. 'uploadImage' method collects information about image, sto
 info into sql database, creates thumbnail and returns new data back as json 
 as response to XMLHttpRequest. Stored images are string formatted in userid_imageid.extension or
 userid_imageid_t.extension for thumbnail images for use with glob function.
+
+### Todo
+
+Add security tokens to ajax communication.
 
 ---
 

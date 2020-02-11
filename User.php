@@ -85,7 +85,7 @@ class User extends Model
     public function loginUser($jsonData)
     { 
         $data = json_decode(urldecode(base64_decode($jsonData, TRUE))); 
-        consoleDump($data);
+        //consoleDump($data);
         $userId = $this->emailExists($data->email);
         
         if ($userId > 0)

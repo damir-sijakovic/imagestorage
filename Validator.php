@@ -3,6 +3,8 @@
 namespace DSimageStorage;
 require __DIR__ . '/Core.php';
 
+// validates datatypes
+// - implemented but not in use yet
 class Validator extends Core
 {
     
