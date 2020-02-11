@@ -66,6 +66,8 @@ class Image extends User
         
         if (move_uploaded_file($files['tmp_name'], $uploadDir.$outputFilename))
         {    
+            $this->setSessionConfig('project_images', $this->getNumberOfImages());  
+            
             $returnData = [
                 'imageid' => $imageId,
                 'filename' => $originalFilename,
@@ -156,6 +158,7 @@ class Image extends User
         $status = $this->getNumberOfImages();        
         return ['success' => $status];        
     }  
+    
     
     
     public function deleteDirImage($imgid)

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<note>
+<page type="string"> 11</page>
+<per_page type="number"> 12</per_page>
+</note> 
+<!--
+<note>
+<to>Tove</to>
+<from>Jani</from>
+<heading>Reminder</heading>
+<body>Don't forget me this weekend!</body>
+</note> 
+-->

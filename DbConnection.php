@@ -1,9 +1,9 @@
 <?php
   
 namespace DSimageStorage;
-require __DIR__ . '/Core.php';
+require __DIR__ . '/Validator.php';
 
-class DbConnection extends Core
+class DbConnection extends Validator
 {
     public function initGetPdo()
     {

@@ -1,6 +1,8 @@
 <?php
 
 namespace DSimageStorage;
+require __DIR__ . '/addons/Validator.php';
+require __DIR__ . '/addons/Paginator.php';
 
 class Config
 {
@@ -9,7 +11,6 @@ class Config
     
 	public $config = 
     [    
-
         //db credentials
 		'dbHost' => 'localhost',
 		'dbPort' => 3306,
@@ -17,12 +18,15 @@ class Config
 		'dbUserName' => 'dsImageStorage',
 		'dbPass' => 'dsImageStorage',     
         
-        //image
+        //image        
         'thumbnailSize' => 64,   
         'uploadDir' => __DIR__ . '/public/_imagedata_/',
         'publicUploadDir' => './_imagedata_/',
         
-        
+        //pagination
+        'pageString' => 'page',         
+        'perPageString' => 'per_page',       
+        'itemsPerPage' => 10,  
 	]; 
     
 };

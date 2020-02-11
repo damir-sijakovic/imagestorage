@@ -7,11 +7,12 @@ class Controller extends View
 {
     public function parseUrl($request)
     {    
+        // IS USER ONLINE
+        $userOnline = $this->sessionHaveUser();        
         
         // GRAB FILES AND CHECK SIZE 
-        if (empty($_FILES) && empty($_POST) && isset($_SERVER['REQUEST_METHOD']) && strtolower($_SERVER['REQUEST_METHOD']) == 'post') 
-        {
-            
+        if (empty($_FILES) && empty($_POST) && isset($_SERVER['REQUEST_METHOD']) && strtolower($_SERVER['REQUEST_METHOD']) == 'post' && $userOnline) 
+        {            
             echo json_encode(['error' => 'Selected file is too large for upload. (2 MB is limit)']); 
             die();
         }    
@@ -20,33 +21,33 @@ class Controller extends View
         // POST REQUESTS
         if (isset($_POST) && count($_POST) > 0) 
         {            
-            if (isset($request['login']))
+            if (isset($request['login']) )
             {       
                 $response = $this->loginUser($request['login']);               
-            }            
+            }                        
             else if (isset($request['register']))
             { 
                 $response = $this->registerUser($request['register']);
             }
             
-            else if (isset($request['logout']))
+            else if (isset($request['logout']) && $userOnline)
             {         
                 $response = $this->logoutUser($request['logout']);   
             }
                 
-            else if (isset($request['changepassword']))
+            else if (isset($request['changepassword']) && $userOnline)
             { 
                 $response = $this->changeUserPass($request['changepassword']);
             }
-            else if (isset($request['deleteaccount']))
+            else if (isset($request['deleteaccount']) && $userOnline)
             { 
                 $response = $this->deleteAccount($request['deleteaccount']);
             }
-            else if (isset($request['imagenumber']))
+            else if (isset($request['imagenumber']) && $userOnline)
             { 
                 $response = $this->getImageNumber();
             }
-            else if (isset($request['deleteimage']))
+            else if (isset($request['deleteimage']) && $userOnline)
             { 
                 $response = $this->deleteUserImage($request['deleteimage']);
             }
@@ -78,11 +79,18 @@ class Controller extends View
                     $this->viewAccountPage(); 
                     return;
                 }                
-                else if ($request['dst'] == 'imagelist'){
+                else if ($request['dst'] == 'imagelist' && $userOnline){  
+                                      
+                    if (isset($_GET[$this->getConfigValue('pageString')]))
+                    {
+                        $this->parsePaginate($_GET[$this->getConfigValue('pageString')]);
+                    }
+                    //parsePaginate($urlParam)                        
+                        
                     $this->viewImageListPage(); 
                     return;
                 }                 
-                else if ($request['dst'] == 'imagenumber'){
+                else if ($request['dst'] == 'imagenumber' && $userOnline){
                     $this->viewImageNumberPage(); 
                     return;
                 }     
@@ -103,7 +111,7 @@ class Controller extends View
         
         // UPLOAD
         
-        if (isset($_FILES["imageupload"]) )
+        if (isset($_FILES["imageupload"]) && $userOnline)
         {	
             $response = $this->uploadImage($_FILES["imageupload"]);
          
@@ -129,4 +137,6 @@ class Controller extends View
     }
 
     
+
+
 };

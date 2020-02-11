@@ -303,6 +303,83 @@ class Model extends DbConnection
     }
     
     
+    public function getImageDataRange($from, $length)
+    {
+        $pdo = self::$pdo;
+        
+        $sql = "SELECT `id` AS `imageid`, `filename`, `type`, `size`, `user_id` AS `userid`, 
+        (SELECT `name` FROM `users` WHERE `id` = `user_id`) AS `username`,
+        (SELECT `email` FROM `users` WHERE `id` = `user_id`) AS `email`,
+        CONCAT(`user_id`, '_', `id`, '.', `type`) AS `newname`
+        FROM `images` LIMIT :from , :length";
+                
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':from', $from, \PDO::PARAM_INT); 
+        $stmt->bindValue(':length', $length, \PDO::PARAM_INT); 
+        
+        try 
+        {  
+            $stmt->execute();
+        } 
+        catch (\PDOException $e)
+        {
+            consoleLog('paginateImageData() SQL error: ' . $e );
+            return null;
+        } 
+        
+
+        if ($stmt->rowCount() > 0)
+        {
+            $row = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            return $row;
+        }
+
+        
+        return [];
+    }
+    
+    
+    public function paginateImageData($page, $perpage)
+    {
+        //(page-1) * perpage; 
+        $pdo = self::$pdo;
+        $from = ($page-1) * $perpage; 
+        $length = $perpage;
+        
+        $sql = "SELECT `id` AS `imageid`, `filename`, `type`, `size`, `user_id` AS `userid`, 
+        (SELECT `name` FROM `users` WHERE `id` = `user_id`) AS `username`,
+        (SELECT `email` FROM `users` WHERE `id` = `user_id`) AS `email`,
+        CONCAT(`user_id`, '_', `id`, '.', `type`) AS `newname`
+        FROM `images` LIMIT :from , :length";
+                
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':from', $from, \PDO::PARAM_INT); 
+        $stmt->bindValue(':length', $length, \PDO::PARAM_INT); 
+        
+        try 
+        {  
+            $stmt->execute();
+        } 
+        catch (\PDOException $e)
+        {
+            consoleLog('paginateImageData() SQL error: ' . $e );
+            return null;
+        } 
+        
+
+        if ($stmt->rowCount() > 0)
+        {
+            $row = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            return $row;
+        }
+
+        
+        return [];
+    }
+    
+    
+    
+    
 };
 
 

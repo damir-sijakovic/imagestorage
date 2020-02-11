@@ -51,7 +51,8 @@ class User extends Model
             $delDirMsg = $this->deleteDirImage($data->imageid);
             $delSqlMsg = $this->deleteImage(intval($data->imageid));
               
-            if (isset($delDirMsg['success'])){
+            if (isset($delDirMsg['success'])){                
+                $this->setSessionConfig('project_images', $this->getNumberOfImages());                 
                 return ['success' => "Image deleted."]; 
             }
             
@@ -84,12 +85,14 @@ class User extends Model
     public function loginUser($jsonData)
     { 
         $data = json_decode(urldecode(base64_decode($jsonData, TRUE))); 
+        consoleDump($data);
         $userId = $this->emailExists($data->email);
         
         if ($userId > 0)
         {         
             $sqlData = $this->getUserData($userId);
-
+            $sqlData['numberOfImages'] = $this->getNumberOfImages();
+            
             $password = false; 
             
             if (password_verify(strval($data->password), $sqlData['password']))
@@ -144,6 +147,10 @@ class User extends Model
         $this->setSessionConfig('user_id', $sqlData['id']);
         $this->setSessionConfig('user_name', $sqlData['name']);
         $this->setSessionConfig('user_email', $sqlData['email']);    
+        $this->setSessionConfig('project_images', $sqlData['numberOfImages']);    
+        
+        $this->setSessionConfig($this->getConfigValue('pageString'), 1); 
+        $this->setSessionConfig($this->getConfigValue('perPageString'), $this->getConfigValue('itemsPerPage')); 
        // $this->setSessionConfig('user_token', guidv4(openssl_random_pseudo_bytes(16)));     
     }
     
@@ -151,7 +158,12 @@ class User extends Model
     {
         $this->removeSessionConfig('user_id');
         $this->removeSessionConfig('user_name');
-        $this->removeSessionConfig('user_email'); 
+        $this->removeSessionConfig('user_email');         
+        $this->removeSessionConfig('project_images');
+         
+        $this->removeSessionConfig($this->getConfigValue('pageString')); 
+        $this->removeSessionConfig($this->getConfigValue('perPageString')); 
+                
       //  $this->removeSessionConfig('user_token');
     }
     
@@ -162,9 +174,13 @@ class User extends Model
             $id = $this->getSessionConfig('user_id');
             $name = $this->getSessionConfig('user_name');
             $email = $this->getSessionConfig('user_email'); 
+            $images = $this->getSessionConfig('project_images'); 
+            $page = $this->getSessionConfig($this->getConfigValue('pageString')); 
+            $perPage = $this->getSessionConfig($this->getConfigValue('perPageString')); 
+      
             //$token = $this->getSessionConfig('user_token');
            
-            return ['id' => $id, 'name' => $name, 'email' => $email ];
+            return ['id' => $id, 'name' => $name, 'email' => $email, 'images' => $images, 'page' => $page, 'perpage' => $perPage];
         }
         else 
         {
@@ -175,6 +191,7 @@ class User extends Model
     
     public function sessionHaveUser(){
         if ($this->isSessionKeySet('user_id')){
+            $this->setSessionConfig('project_images', $this->getNumberOfImages());  
             return true;
         }
         return false;

@@ -10,6 +10,12 @@ function consoleDump($arg)
     error_log(print_r($arg, true));       
 }
 
+function consoleDumpSession()
+{
+    error_log(print_r($_SESSION, true));       
+}
+
+
 function consoleLog($arg)
 {
     error_log($arg);       
@@ -20,9 +26,15 @@ function consoleBool($arg)
     ($arg) ? error_log('consoleBool: true') : error_log('consoleBool: false');       
 }
 
-function stopScript()
+function stopScript($arg = null)
 {       
-    error_log('Script stoped.');   
+    $bt = debug_backtrace();
+    $caller = array_shift($bt);
+    
+    $nomsg = '<stopScript> '. basename($bt[0]['file'])  .'/'. $bt[0]['line'] . ':'. $bt[0]['function'] .'()';
+    $msg = '<stopScript> '. basename($bt[0]['file'])  .'/'. $bt[0]['line'] . ':'. $bt[0]['function'] .'() => ' . $arg;
+    
+    error_log( ($arg) ? $msg : $nomsg );  
     die();    
 }
 

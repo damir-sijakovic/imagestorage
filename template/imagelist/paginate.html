@@ -1,0 +1,135 @@
+<!-- 
+dsis_paginator module
+-->
+
+<br><br>
+
+<div id="dsis_paginator" class="w3-animate-opacity">  
+
+
+<div class="w3-center">
+<div class="w3-bar w3-border w3-card">
+  <a id="dsis_paginator_first" href="javascript:void(0)" class="w3-bar-item w3-button">First</a>
+  <a id="dsis_paginator_prev"  href="javascript:void(0)" class="w3-bar-item w3-button">&laquo;</a>
+  <div style="display:inline">
+  <a id="dsis_paginator_1" href="javascript:void(0)" class="w3-bar-item w3-button"></a>
+  <a id="dsis_paginator_2" href="javascript:void(0)" class="w3-bar-item w3-button"></a>
+  <a id="dsis_paginator_3" href="javascript:void(0)" class="w3-bar-item w3-button"></a>
+  </div>
+  <a id="dsis_paginator_next" href="javascript:void(0)" class="w3-bar-item w3-button">&raquo;</a>
+  <a id="dsis_paginator_last" href="javascript:void(0)" class="w3-bar-item w3-button">Last</a>
+</div>
+</div>
+    
+</div>
+
+
+<script>
+
+console.log(accountData);
+
+function dsis_paginator(){
+    
+    let paginatorContainer = document.getElementById("dsis_paginator");
+
+    if (accountData.paginator.length == 0){
+        paginatorContainer.style.display = 'none';
+    }
+        
+    let first = document.getElementById("dsis_paginator_first");
+    let prev = document.getElementById("dsis_paginator_prev");
+    let page1 = document.getElementById("dsis_paginator_1");
+    let page2 = document.getElementById("dsis_paginator_2");
+    let page3 = document.getElementById("dsis_paginator_3");
+    let next = document.getElementById("dsis_paginator_next");
+    let last = document.getElementById("dsis_paginator_last");
+    let groupNumbers = accountData.paginator.group.split(",");
+    // w3-disabled    
+    console.log(groupNumbers);
+    
+    if (accountData.paginator.first){
+        first.setAttribute('href', accountData.paginator.first);
+    }
+    else {        
+        first.setAttribute('class', "w3-bar-item w3-button w3-disabled");
+    }
+    
+    if (accountData.paginator.prev){
+        prev.setAttribute('href', accountData.paginator.prev);
+    }
+    else {        
+        prev.setAttribute('class', "w3-bar-item w3-button w3-disabled");
+    }
+    
+    if (accountData.paginator.page1){
+        if (accountData.paginator.page1 === accountData.paginator.current){
+            page1.setAttribute('class', "w3-bar-item w3-button w3-blue");
+        }
+        page1.setAttribute('href', accountData.paginator.page1);
+        page1.innerHTML = groupNumbers[0];
+    }
+    else
+    {
+        page1.setAttribute('class', "w3-bar-item w3-button w3-disabled");
+    }
+    
+    if (accountData.paginator.page2){
+        if (accountData.paginator.page2 === accountData.paginator.current){
+            page2.setAttribute('class', "w3-bar-item w3-button w3-blue");
+        }
+        page2.setAttribute('href', accountData.paginator.page2);
+        page2.innerHTML = groupNumbers[1];
+    }
+    else
+    {
+        page3.style.display = 'none';
+    }
+    
+    if (accountData.paginator.page3){
+        if (accountData.paginator.page3 === accountData.paginator.current){
+            page3.setAttribute('class', "w3-bar-item w3-button w3-blue");
+        }
+        page3.setAttribute('href', accountData.paginator.page3);
+        page3.innerHTML = groupNumbers[2];
+    }
+    else
+    {
+        page3.style.display = 'none';
+    }
+    
+    if (accountData.paginator.next){
+        next.setAttribute('href', accountData.paginator.next);
+    }
+    else
+    {
+        next.setAttribute('class', "w3-bar-item w3-button w3-disabled");
+    }
+    
+    if (accountData.paginator.last){
+        if (accountData.paginator.last === accountData.paginator.current){
+            last.setAttribute('class', "w3-bar-item w3-button w3-disabled");
+        }
+        else {
+            last.setAttribute('href', accountData.paginator.last);
+        }
+    }
+    else
+    {
+        last.setAttribute('class', "w3-bar-item w3-button w3-disabled");
+    }
+
+}
+dsis_paginator();
+
+
+
+
+
+
+</script>
+
+
+
+
+
+

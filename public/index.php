@@ -9,3 +9,4 @@ session_start();
 $app = new App();
 $app->parseUrl($_REQUEST);
 
+consoleDump($this->getPaginationData());
