@@ -1,8 +1,6 @@
 <?php
 
 namespace DSimageStorage;
-require __DIR__ . '/addons/Validator.php';
-require __DIR__ . '/addons/Paginator.php';
 
 class Config
 {
